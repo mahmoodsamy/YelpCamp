@@ -1,0 +1,21 @@
+<% layout('layouts/boilerplate') -%>
+    <div class="row">
+        <div class="col-6 offset-3">
+
+            <div class="alert alert-danger" role="alert">
+                <h4 class="alert-heading">
+                    <%= err.message %>
+                </h4>
+               <!-- developing mode  -->
+                <p>
+                    <%= err.stack %>
+                </p>
+                <!-- <p>404 Error: Page Not Found. We're sorry, but the URL you entered does not exist on our website. Please
+                    check the URL for errors and try again, or use the navigation menu above to find what you're looking
+                    for.
+                    <hr>
+                <p class="mb-0">If you believe you've reached this page in error, please contact our support team for
+                    assistance.</p> -->
+            </div>
+        </div>
+    </div>
