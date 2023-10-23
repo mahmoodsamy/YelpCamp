@@ -36,7 +36,12 @@ export const addCampground = async (req, res, next) => {
 
 
 export const getCampgroundById = async (req, res) => {
-    const campground = await Campground.findById(req.params.id).populate('reviews').populate('author');
+    const campground = await Campground.findById(req.params.id).populate({
+        path: 'reviews',
+        populate: {
+            path: 'author'
+        }
+    }).populate('author');
     console.log(campground);
     if (!campground) {
         req.flash('error', 'Cannot find that camoground')
@@ -45,7 +50,7 @@ export const getCampgroundById = async (req, res) => {
     res.render('campgrounds/show', { campground });
 }
 
-export const editCampgroundFrom = async (req, res) => {
+export const editCampgroundForm = async (req, res) => {
     const campground = await Campground.findById(req.params.id);
     if (!campground) {
         req.flash('error', 'Cannot find that camoground')
@@ -55,7 +60,6 @@ export const editCampgroundFrom = async (req, res) => {
 }
 
 export const editCampground = async (req, res) => {
-    const { id } = req.params
     const campground = await Campground.findByIdAndUpdate(id, { ...req.body.campground })
     req.flash('success', 'Successfully updated campground')
     res.redirect(`/campgrounds/${campground._id}`);
@@ -64,8 +68,17 @@ export const editCampground = async (req, res) => {
 
 
 export const deleteCampground = async (req, res) => {
-    const { id } = req.params;
     await Campground.findByIdAndDelete(id);
     req.flash('success', 'Successfully deleted campground!');
     res.redirect('/campgrounds');
+}
+
+const isAuthor = async (req, res, next) => {
+    const { id } = req.params;
+    const campground = await Campground.findById(id);
+    if (!campground.author.equals(req.user._id)) {
+        req.flash('error', `you don't have permission to do that!`)
+        res.redirect(`/campgrounds/${id}`)
+    }
+    next();
 }
