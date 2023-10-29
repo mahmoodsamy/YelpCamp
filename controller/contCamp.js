@@ -42,7 +42,7 @@ export const getCampgroundById = async (req, res) => {
             path: 'author'
         }
     }).populate('author');
-    console.log(campground);
+    console.log(campground.author._id);
     if (!campground) {
         req.flash('error', 'Cannot find that camoground')
         res.redirect('/campgrounds');
@@ -60,7 +60,9 @@ export const editCampgroundForm = async (req, res) => {
 }
 
 export const editCampground = async (req, res) => {
+    const { id } = req.params;
     const campground = await Campground.findByIdAndUpdate(id, { ...req.body.campground })
+    console.log(id);
     req.flash('success', 'Successfully updated campground')
     res.redirect(`/campgrounds/${campground._id}`);
 
@@ -68,6 +70,7 @@ export const editCampground = async (req, res) => {
 
 
 export const deleteCampground = async (req, res) => {
+    const { id } = req.params;
     await Campground.findByIdAndDelete(id);
     req.flash('success', 'Successfully deleted campground!');
     res.redirect('/campgrounds');
