@@ -1,3 +1,10 @@
+import 'dotenv/config';
+if(process.env.NODE_ENV !== "production"){
+    import('dotenv').then(() => {
+        console.log('env file has been loaded');
+    })
+}
+
 import path from 'path';
 import { fileURLToPath } from 'url';
 import connection from './DB/config.js';
